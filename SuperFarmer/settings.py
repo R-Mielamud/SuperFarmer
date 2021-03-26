@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from dotenv import load_dotenv
+from os import environ as env
 from pathlib import Path
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5+sb8$w0a-*y0*7_ewl!rp%fnk7o2a3(l*$ppl#h+bdxt-ty2b'
+SECRET_KEY = env.get("SECRET_KEY", "")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if env.get("DEBUG", "1") == "1" else False
 
 ALLOWED_HOSTS = []
 
@@ -45,7 +49,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'api.middleware.data_middleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -127,3 +132,13 @@ SOCKETIO_CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://amritb.github.io",
 ]
+
+# JWT
+
+JWT_ALGORITHM = "HS512"
+
+JWT_SECRET = env.get("JWT_SECRET", "")
+
+JWT_USER_FIELD = "id"
+
+JWT_PREFIX = "Bearer "
