@@ -1,2 +1,2 @@
 Django==3.1.7
-socketio==0.2.1
+python-socketio==5.1.0
