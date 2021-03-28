@@ -1,0 +1,26 @@
+@import "../../../styles/variables.scss";
+
+.loader {
+	$border: 6px $light-grey-color solid;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	border-top: 6px $secondary-color solid;
+	border-left: $border;
+	border-right: $border;
+	border-bottom: $border;
+	animation-name: rotate;
+	animation-duration: 0.7s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+@keyframes rotate {
+	from {
+		transform: rotateZ(0);
+	}
+
+	to {
+		transform: rotateZ(360deg);
+	}
+}

@@ -1,0 +1,18 @@
+@import "../../../styles/variables.scss";
+
+.dimmer {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: $modal-bg;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+
+	&.inverted {
+		background-color: $inverted-modal-bg;
+	}
+}
