@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "corsheaders",
     "authorization",
     "game",
 ]
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'api.middleware.data_middleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
@@ -131,6 +133,26 @@ STATIC_URL = '/static/'
 SOCKETIO_CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "https://amritb.github.io",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+CORS_ALLOW_MEHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+]
+
+CORS_ALLOW_HEADERS = [
+    "Accept",
+    "Content-Type",
+    "Origin",
+    "User-Agent",
+    "Authorization",
 ]
 
 # JWT

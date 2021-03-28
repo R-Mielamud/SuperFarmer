@@ -13,7 +13,7 @@ def extract_user_id(token):
     return data[settings.JWT_USER_FIELD]
 
 def remove_jwt_prefix(token):
-    if not token.startswith(settings.JWT_PREFIX) or not token:
+    if not token or not token.startswith(settings.JWT_PREFIX):
         return None
 
     return token[len(settings.JWT_PREFIX):]

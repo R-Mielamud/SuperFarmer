@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
 from helpers.jwt import encode_user_token, extract_socket_user
@@ -17,11 +16,14 @@ def serialize_user(user):
 class RegisterAPI(View):
     def post(self, request):
         data = request.POST
-        unique_check_query = Q(email=data.get("email")) | Q(username=data.get("username"))
-        unique_check = User.objects.filter(unique_check_query).first()
+        email_check = User.objects.filter(email=data.get("email")).first()
+        username_check = User.objects.filter(username=data.get("username")).first()
 
-        if unique_check:
-            return JsonResponse({"message": "This email or username is already taken"}, status=401)
+        if email_check:
+            return JsonResponse({"message": "This email is already taken"}, status=401)
+
+        if username_check:
+            return JsonResponse({"message": "This username is already taken"}, status=401)
 
         create_data = {
             "first_name": data.get("first_name"),
@@ -31,7 +33,6 @@ class RegisterAPI(View):
             "password": data.get("password"),
         }
 
-        print(create_data)
         user = User.objects.create(**create_data)
         json_user = serialize_user(user)
         token = encode_user_token(user)
