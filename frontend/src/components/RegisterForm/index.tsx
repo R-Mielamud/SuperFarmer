@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { emailValidators } from "../../helpers/validators/email.validator";
-import { validateRegisterData } from "../../helpers/validators/register.validator";
+import emailValidator from "../../helpers/validators/email.validator";
+import namesValidator from "../../helpers/validators/names.validator";
+import regsiterValidator from "../../helpers/validators/register.validator";
+import usernameValidator from "../../helpers/validators/username.validator";
 import Button, { ButtonType } from "../common/Button";
 import Form from "../common/Form";
 import Input from "../common/Input";
@@ -18,7 +20,9 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
 	const [usernameValid, setUsernameValid] = useState<boolean>(true);
 	const [passwordValid, setPasswordValid] = useState<boolean>(true);
 	const [passwordHidden, setPasswordHidden] = useState<boolean>(true);
-	const dataValid = validateRegisterData(data);
+	const [firstNameValid, setFirstNameValid] = useState<boolean>(true);
+	const [lastNameValid, setLastNameValid] = useState<boolean>(true);
+	const dataValid = regsiterValidator.validate(data);
 
 	const addToData = (props: Partial<Data>) => {
 		setData({ ...data, ...props });
@@ -42,6 +46,16 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
 		setUsernameValid(true);
 	};
 
+	const setFirstName = (firstName: string) => {
+		addToData({ first_name: firstName });
+		setFirstNameValid(true);
+	};
+
+	const setLastName = (lastName: string) => {
+		addToData({ last_name: lastName });
+		setLastNameValid(true);
+	};
+
 	return (
 		<Form onSubmit={register}>
 			<Input<string>
@@ -51,7 +65,7 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
 				value={data.email ?? ""}
 				onChange={setEmail}
 				error={!emailValid}
-				onBlur={() => setEmailValid(emailValidators.default(data.email))}
+				onBlur={() => setEmailValid(emailValidator.validate(data.email))}
 			/>
 			<PasswordInput
 				fluid
@@ -68,22 +82,26 @@ const RegisterForm: React.FC<Props> = ({ onSubmit }) => {
 				placeholder="Username"
 				value={data.username ?? ""}
 				onChange={setUsername}
-				error={!usernameValid}
-				onBlur={() => setUsernameValid(Boolean(data.username))}
+				error={!usernameValid && "Username must be shorter than 30 characters"}
+				onBlur={() => setUsernameValid(usernameValidator.validate(data.username))}
 			/>
 			<Input<string>
 				fluid
 				icon={{ name: "user" }}
 				placeholder="First name"
 				value={data.first_name ?? ""}
-				onChange={(first_name) => addToData({ first_name })}
+				error={!firstNameValid && "First name must be shorter than 20 characters"}
+				onChange={setFirstName}
+				onBlur={() => setFirstNameValid(data.first_name ? namesValidator.validate(data.first_name) : true)}
 			/>
 			<Input<string>
 				fluid
 				icon={{ name: "user" }}
 				placeholder="Last name"
 				value={data.last_name ?? ""}
-				onChange={(last_name) => addToData({ last_name })}
+				error={!lastNameValid && "Last name must be shorter than 20 characters"}
+				onChange={setLastName}
+				onBlur={() => setLastNameValid(data.last_name ? namesValidator.validate(data.last_name) : true)}
 			/>
 			<Button primary type={ButtonType.Submit} fluid disabled={!dataValid}>
 				Register

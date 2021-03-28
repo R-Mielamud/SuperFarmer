@@ -12,7 +12,11 @@ export interface Register {
 	data: WebApi.Requests.UserRegister;
 }
 
-export interface LoadProfileSuccess {
+export interface AuthSuccess {
 	user?: WebApi.Entity.User;
 	jwtToken?: string;
+}
+
+export interface LoadProfileSuccess {
+	user?: WebApi.Entity.User;
 }

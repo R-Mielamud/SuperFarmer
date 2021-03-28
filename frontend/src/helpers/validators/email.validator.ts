@@ -1,5 +1,13 @@
 import validator from "validator";
+import { ValidatorSet } from "../../typings/validators";
 
-export const emailValidators: Validators<string> = {
-	default: (email) => Boolean(email && validator.isEmail(email.trim())),
-};
+class EmailValidator extends ValidatorSet<string> {
+	public constructor() {
+		super({
+			default: (email) => validator.isEmail(email.trim()),
+		});
+	}
+}
+
+const emailValidator = new EmailValidator();
+export default emailValidator;

@@ -40,8 +40,8 @@ function* loadProfile() {
 	try {
 		const result: WebApi.Entity.User = yield call(service.getProfile);
 		yield put(actions.loadProfileSuccess({ user: result }));
-	} catch {
-		if (/login|register/.test(window.location.href)) {
+	} catch (err) {
+		if (!/login|register/.test(window.location.href)) {
 			history.push("/login");
 			removeToken();
 		}

@@ -1,6 +1,7 @@
 import createReducer from "../../../helpers/createReducer.helper";
 import AuthState, { authInitialState } from "./state";
 import * as actionTypes from "./actionTypes";
+import { getToken } from "../../../helpers/token.helper";
 
 export const authReducer = createReducer<AuthState>(authInitialState, {
 	[actionTypes.LOGIN](state) {
@@ -15,7 +16,7 @@ export const authReducer = createReducer<AuthState>(authInitialState, {
 			authLoading: true,
 		};
 	},
-	[actionTypes.AUTH_SUCCESS](state, action: actionTypes.LoadProfileSuccess) {
+	[actionTypes.AUTH_SUCCESS](state, action: actionTypes.AuthSuccess) {
 		return {
 			...state,
 			authLoading: false,
@@ -29,8 +30,8 @@ export const authReducer = createReducer<AuthState>(authInitialState, {
 			...state,
 			profileLoaded: true,
 			user: action.user,
-			jwtToken: action.jwtToken,
-			isAuthorized: Boolean(action.user) && Boolean(action.jwtToken),
+			jwtToken: getToken() ?? "",
+			isAuthorized: Boolean(action.user),
 		};
 	},
 });

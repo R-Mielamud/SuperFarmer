@@ -2,7 +2,7 @@ import React from "react";
 import { IconName } from "@fortawesome/fontawesome-common-types";
 import Input, { InputType } from "../Input";
 import { IconSettings } from "../Icon";
-import { passwordValidators } from "../../../helpers/validators/password.validator";
+import passwordValidator from "../../../helpers/validators/password.validator";
 
 interface Props {
 	value: string;
@@ -10,9 +10,9 @@ interface Props {
 	valid?: boolean;
 	fluid?: boolean;
 	errorMessage?: string;
+	validator?: string;
 	setValue: Setter<string>;
 	setHidden: Setter<boolean>;
-	validator?: Validator<string>;
 	setValid?: Setter<boolean>;
 }
 
@@ -22,6 +22,7 @@ const PasswordInput: React.FC<Props> = ({
 	fluid,
 	hidden,
 	errorMessage = "Password must be minimum 6 characters long",
+	validator,
 	setValid,
 	setValue,
 	setHidden,
@@ -49,7 +50,7 @@ const PasswordInput: React.FC<Props> = ({
 			value={value}
 			placeholder="Password"
 			onChange={onChange}
-			onBlur={() => setValid && setValid(passwordValidators.default(value))}
+			onBlur={() => setValid && setValid(passwordValidator.validate(value, validator))}
 		/>
 	);
 };
