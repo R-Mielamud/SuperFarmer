@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "corsheaders",
+    "sockets",
     "authorization",
     "game",
 ]
@@ -164,3 +165,7 @@ JWT_SECRET = env.get("JWT_SECRET", "")
 JWT_USER_FIELD = "id"
 
 JWT_PREFIX = "Bearer "
+
+# Sockets
+
+FRONTEND_EVENTS_FILE = BASE_DIR / "frontend" / "src" / "typings" / "socket.d.ts"

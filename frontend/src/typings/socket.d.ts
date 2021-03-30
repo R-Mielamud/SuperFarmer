@@ -1,0 +1,4 @@
+namespace Socket {
+    enum Events {
+    }
+}
