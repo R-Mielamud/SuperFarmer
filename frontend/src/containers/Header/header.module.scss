@@ -1,0 +1,47 @@
+@import "../../styles/variables.scss";
+
+.header {
+	width: 100%;
+	height: 70px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 10px 40px;
+	color: $black-color;
+	background-color: white;
+	box-sizing: border-box;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	animation: header 0.5s ease-in;
+
+	& > * {
+		display: flex;
+		align-items: center;
+		max-height: 100%;
+	}
+
+	.logout {
+		cursor: pointer;
+		font-weight: 600;
+
+		&:hover {
+			border-bottom: 2px solid $black-color;
+			transform: translateY(1px);
+		}
+	}
+
+	.logo {
+		height: 50px;
+	}
+}
+
+@keyframes header {
+	from {
+		transform: translateY(-70px);
+	}
+
+	to {
+		transform: translateY(0);
+	}
+}
