@@ -1,1 +1,2 @@
-EVENTS = {}
+EVENTS_EMIT = {}
+EVENTS_ON = {}
