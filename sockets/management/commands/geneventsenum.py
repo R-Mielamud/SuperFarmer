@@ -4,30 +4,28 @@ from sockets.events import EVENTS_EMIT, EVENTS_ON
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        string = """namespace IO {
-    enum ServerEvents {
+        string = """export enum ServerEvents {
 """
 
         for key, value in EVENTS_EMIT.items():
             string += "        {} = \"{}\",\n".format(key, value)
 
-        string += """    }
+        string += """}
 
-    enum ClientEvents {
+export enum ClientEvents {
 """
 
         for key, value in EVENTS_ON.items():
             string += "        {} = \"{}\",\n".format(key, value)
 
-        string += """    }
+        string += """}
 
-    interface ServerEventsMap {
-        [key: ServerEvents]: any;
-    }
+export interface ServerEventsMap {
+    [key: string]: any;
+}
 
-    interface ClientEventsMap {
-        [key: ClientEvents]: any;
-    }
+export interface ClientEventsMap {
+    [key: string]: any;
 }
 """
 

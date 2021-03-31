@@ -168,4 +168,4 @@ JWT_PREFIX = "Bearer "
 
 # Sockets
 
-FRONTEND_EVENTS_FILE = BASE_DIR / "frontend" / "src" / "typings" / "socket.d.ts"
+FRONTEND_EVENTS_FILE = BASE_DIR / "frontend" / "src" / "typings" / "socket.ts"

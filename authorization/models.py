@@ -1,7 +1,8 @@
 from django.db.models import *
 from helpers.password import hash_password
+from SuperFarmer.base import Serializable
 
-class User(Model):
+class User(Model, Serializable):
     email = EmailField(unique=True)
     password = CharField(max_length=200)
     username = CharField(max_length=30, unique=True)
@@ -18,3 +19,13 @@ class User(Model):
             self.password = hash_password(self.password)
 
         return super().save(*args, **kwargs)
+
+    @classmethod
+    def serialize(cls, instance):
+        return {
+            "id": instance.id,
+            "first_name": instance.first_name,
+            "last_name": instance.last_name,
+            "email": instance.email,
+            "username": instance.username,
+        }

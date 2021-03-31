@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { io as connect, Socket } from "socket.io-client";
 import { getToken } from "../helpers/token.helper";
+import { ServerEventsMap, ClientEventsMap } from "../typings/socket";
 
 interface Handler {
 	(io: Socket): void;
 }
 
 export default function useIO(handle: Handler) {
-	const [io, setIO] = useState<Socket<IO.ServerEventsMap, IO.ClientEventsMap> | null>(null);
+	const [io, setIO] = useState<Socket<ServerEventsMap, ClientEventsMap> | null>(null);
 
 	useEffect(() => {
 		if (!io) {

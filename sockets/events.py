@@ -1,2 +1,5 @@
 EVENTS_EMIT = {}
-EVENTS_ON = {}
+
+EVENTS_ON = {
+    "GET_ROOMS": "GAME:ROOMS:GET",
+}
