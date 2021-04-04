@@ -9,6 +9,7 @@ class User(Model, Serializable):
     first_name = CharField(max_length=20, blank=True, null=True)
     last_name = CharField(max_length=20, blank=True, null=True)
     room = ForeignKey(to="game.Room", on_delete=CASCADE, related_name="users", blank=True, null=True)
+    is_room_admin = BooleanField(default=False)
     is_active = True
 
     def __str__(self):
@@ -23,9 +24,10 @@ class User(Model, Serializable):
     @classmethod
     def serialize(cls, instance):
         return {
-            "id": instance.id,
+            "id": instance.pk,
             "first_name": instance.first_name,
             "last_name": instance.last_name,
             "email": instance.email,
             "username": instance.username,
+            "room": instance.room.socket_id if instance.room else None,
         }

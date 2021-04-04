@@ -8,7 +8,7 @@ class Command(BaseCommand):
 """
 
         for key, value in EVENTS_EMIT.items():
-            string += "        {} = \"{}\",\n".format(key, value)
+            string += "    {} = \"{}\",\n".format(key, value)
 
         string += """}
 
@@ -16,7 +16,7 @@ export enum ClientEvents {
 """
 
         for key, value in EVENTS_ON.items():
-            string += "        {} = \"{}\",\n".format(key, value)
+            string += "    {} = \"{}\",\n".format(key, value)
 
         string += """}
 

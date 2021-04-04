@@ -16,6 +16,7 @@ def connect(sid, env, auth):
     if not user:
         return False
 
+    io.save_session(sid, {"id": user.id})
     return True
 
 for handle in handlers:

@@ -7,7 +7,7 @@ interface Handler {
 	(io: Socket): void;
 }
 
-export default function useIO(handle: Handler) {
+export default function useIO(handle: Handler, deps: any[] = []) {
 	const [io, setIO] = useState<Socket<ServerEventsMap, ClientEventsMap> | null>(null);
 
 	useEffect(() => {
@@ -25,10 +25,8 @@ export default function useIO(handle: Handler) {
 			setIO(newIO);
 			handle(newIO);
 		} else {
-			const listeners = io.listenersAny();
-			listeners.splice(0, listeners.length);
-
+			io.off();
 			handle(io);
 		}
-	}, []);
+	}, deps);
 }
