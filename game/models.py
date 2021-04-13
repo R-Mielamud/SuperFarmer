@@ -15,12 +15,15 @@ class Room(Model, Serializable):
 
     @classmethod
     def serialize(cls, instance):
+        admin = instance.users.filter(is_room_admin=True).first()
+
         return {
             "id": instance.pk,
             "name": instance.name,
             "socket_id": instance.socket_id,
             "game_states": [state.serialize() for state in instance.game_states.all()],
             "connected": instance.connected,
+            "admin": admin.id if admin else None,
         }
 
 class GameState(Model, Serializable):

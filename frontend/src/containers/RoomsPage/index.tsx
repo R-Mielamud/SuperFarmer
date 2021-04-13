@@ -6,7 +6,7 @@ import ModalLoader from "../../components/common/ModalLoader";
 import useIO from "../../hooks/useIO";
 import { ClientEvents, ServerEvents } from "../../typings/socket";
 import { RootState } from "../../typings/state";
-// import CreateRoomModal from "../CreateRoomModal";
+import CreateRoomModal from "../CreateRoomModal";
 import styles from "./rooms.module.scss";
 
 const RoomsPage: React.FC = () => {
@@ -15,15 +15,16 @@ const RoomsPage: React.FC = () => {
 	const [rooms, setRooms] = useState<WebApi.Entity.Room[] | null>(null);
 	const [connectingRoom, setConnectingRoom] = useState<string | null>(null);
 	const [connectRoom, setConnectRoom] = useState<Setter<string> | null>(null);
+	const [createModalOpen, setCreateModalOpen] = useState<boolean>(false);
 
 	const connected = (id: string) => {
 		history.push(`/game/${id}`);
 	};
 
 	const connect = (socketID: string) => () => {
-		if (!connectRoom) {
-			setConnectingRoom(socketID);
-		} else {
+		setConnectingRoom(socketID);
+
+		if (connectRoom) {
 			connectRoom(socketID);
 		}
 	};
@@ -50,8 +51,8 @@ const RoomsPage: React.FC = () => {
 				setConnectRoom(() => newConnectRoom);
 			});
 
-			io.on(ServerEvents.JOINED_ROOM, (socketID) => {
-				if (connectingRoom || !rooms) {
+			io.on(ServerEvents.JOINED_ROOM, ({ id: socketID, user: userID }: { id: string; user: number }) => {
+				if (connectingRoom || !rooms || !user) {
 					return;
 				}
 
@@ -72,6 +73,24 @@ const RoomsPage: React.FC = () => {
 				}
 
 				setRooms(newRooms);
+
+				if (userID === user.id) {
+					connected(socketID);
+				}
+			});
+
+			io.on(ServerEvents.CREATED_ROOM, (room: WebApi.Entity.Room) => {
+				if (connectingRoom || !rooms || !user) {
+					return;
+				}
+
+				const newRooms = [...rooms];
+				newRooms.push(room);
+				setRooms(newRooms);
+
+				if (room.admin === user.id) {
+					connected(room.socket_id);
+				}
 			});
 		},
 		[rooms],
@@ -81,9 +100,9 @@ const RoomsPage: React.FC = () => {
 		return null;
 	}
 
-	// if (user.room) {
-	// 	connected(user.room);
-	// }
+	if (user.room) {
+		connected(user.room);
+	}
 
 	if (!rooms) {
 		return <ModalLoader />;
@@ -92,8 +111,10 @@ const RoomsPage: React.FC = () => {
 	return (
 		<div>
 			{connectingRoom ? <ModalLoader /> : null}
-			<Button primary>Create room</Button>
-			{/* <CreateRoomModal /> */}
+			<Button primary onClick={() => setCreateModalOpen(true)}>
+				Create room
+			</Button>
+			<CreateRoomModal open={createModalOpen} onCancel={() => setCreateModalOpen(false)} />
 			<div className={styles.rooms}>
 				{rooms.map((room) => (
 					<div className={styles.room} key={room.id}>

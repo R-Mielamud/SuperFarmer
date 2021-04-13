@@ -29,6 +29,7 @@ namespace WebApi.Entity {
 		name: string;
 		socket_id: string;
 		connected: number;
+		admin?: number;
 	}
 }
 

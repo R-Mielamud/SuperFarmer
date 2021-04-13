@@ -1,5 +1,6 @@
 from django.db.models import F, Count
 from sockets.events import EVENTS_ON, EVENTS_EMIT
+from helpers.random_string import generate_random_string
 
 def game_handler(io):
     @io.on(EVENTS_ON["GET_ROOMS"])
@@ -19,7 +20,26 @@ def game_handler(io):
         if not room_singular:
             return
 
-        User.objects.filter(pk=session["id"]).update(room=room_singular, is_room_admin=False)
-        io.emit(EVENTS_EMIT["JOINED_ROOM"], socket_id)
+        user = User.objects.filter(pk=session["id"])
+        user.update(room=room_singular, is_room_admin=False)
+
+        io.emit(EVENTS_EMIT["JOINED_ROOM"], {
+            "id": socket_id,
+            "user": user.first().id,
+        })
+
+        return socket_id
+
+    @io.on(EVENTS_ON["CREATE_ROOM"])
+    def create_room(sid, name):
+        from game.models import Room
+        from authorization.models import User
+
+        session = io.get_session(sid)
+        code = generate_random_string()
+        socket_id = "game-{}".format(code)
+        room = Room.objects.create(name=name, socket_id=socket_id)
+        User.objects.filter(pk=session["id"]).update(room=room, is_room_admin=True)
+        io.emit(EVENTS_EMIT["CREATED_ROOM"], Room.serialize(room))
 
         return socket_id

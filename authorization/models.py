@@ -8,7 +8,7 @@ class User(Model, Serializable):
     username = CharField(max_length=30, unique=True)
     first_name = CharField(max_length=20, blank=True, null=True)
     last_name = CharField(max_length=20, blank=True, null=True)
-    room = ForeignKey(to="game.Room", on_delete=CASCADE, related_name="users", blank=True, null=True)
+    room = ForeignKey(to="game.Room", on_delete=SET_NULL, related_name="users", blank=True, null=True)
     is_room_admin = BooleanField(default=False)
     is_active = True
 
