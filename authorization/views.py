@@ -4,15 +4,6 @@ from helpers.jwt import encode_user_token, extract_socket_user
 from helpers.password import verify_password
 from .models import User
 
-def serialize_user(user):
-    return {
-        "id": user.id,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-        "username": user.username,
-    }
-
 class RegisterAPI(View):
     def post(self, request):
         data = request.POST
@@ -34,7 +25,7 @@ class RegisterAPI(View):
         }
 
         user = User.objects.create(**create_data)
-        json_user = serialize_user(user)
+        json_user = User.serialize(user)
         token = encode_user_token(user)
 
         return JsonResponse({
@@ -57,7 +48,7 @@ class LoginAPI(View):
         if not password_valid:
             return JsonResponse({ "message": "Email or password is invalid" }, status=401)
 
-        json_user = serialize_user(user)
+        json_user = User.serialize(user)
         token = encode_user_token(user)
 
         return JsonResponse({
@@ -73,4 +64,4 @@ class ProfileAPI(View):
         if not user:
             return JsonResponse({ "message": "Not authorized" }, status=401)
 
-        return JsonResponse(serialize_user(user))
+        return JsonResponse(User.serialize(user))
