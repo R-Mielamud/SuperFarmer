@@ -5,6 +5,7 @@ from SuperFarmer.base import Serializable
 class Room(Model, Serializable):
     name = CharField(max_length=50)
     socket_id = CharField(max_length=200)
+    game_started = BooleanField(default=False)
 
     @property
     def connected(self):
@@ -21,9 +22,24 @@ class Room(Model, Serializable):
             "id": instance.pk,
             "name": instance.name,
             "socket_id": instance.socket_id,
-            "game_states": [state.serialize() for state in instance.game_states.all()],
             "connected": instance.connected,
             "admin": admin.id if admin else None,
+            "game_started": instance.game_started,
+        }
+
+    @classmethod
+    def serialize_detailed(cls, instance, current_user_id):
+        admin = instance.users.filter(is_room_admin=True).first()
+        opponents = instance.users.exclude(id=current_user_id).values_list("id", flat=True)
+
+        return {
+            "id": instance.pk,
+            "name": instance.name,
+            "socket_id": instance.socket_id,
+            "game_states": [GameState.serialize(state) for state in instance.game_states.all()],
+            "admin": admin.id if admin else None,
+            "opponents": list(opponents),
+            "game_started": instance.game_started,
         }
 
 class GameState(Model, Serializable):
@@ -34,6 +50,8 @@ class GameState(Model, Serializable):
     pigs = IntegerField(default=0)
     cows = IntegerField(default=0)
     horses = IntegerField(default=0)
+    has_small_dog = BooleanField(default=False)
+    has_big_dog = BooleanField(default=False)
 
     def __str__(self):
         return "Game state of user {} in {}".format(self.user.username, self.room.name)
@@ -48,4 +66,6 @@ class GameState(Model, Serializable):
             "pigs": instance.pigs,
             "cows": instance.cows,
             "horses": instance.horses,
+            "has_small_dog": instance.has_small_dog,
+            "has_big_dog": instance.has_big_dog,
         }

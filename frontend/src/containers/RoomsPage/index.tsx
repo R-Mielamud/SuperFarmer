@@ -79,6 +79,18 @@ const RoomsPage: React.FC = () => {
 				}
 			});
 
+			io.on(ServerEvents.LEFT_ROOM, ({ id, connected }: { id: string; connected: number }) => {
+				if (connected === 0 && rooms) {
+					const newRooms = [...rooms];
+					const index = newRooms.findIndex((room) => room.socket_id === id);
+
+					if (index > -1) {
+						newRooms.splice(index, 1);
+						setRooms(newRooms);
+					}
+				}
+			});
+
 			io.on(ServerEvents.CREATED_ROOM, (room: WebApi.Entity.Room) => {
 				if (connectingRoom || !rooms || !user) {
 					return;

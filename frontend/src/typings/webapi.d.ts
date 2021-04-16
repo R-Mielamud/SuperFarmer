@@ -13,6 +13,8 @@ namespace WebApi.Entity {
 		first_name?: string;
 		last_name?: string;
 		room?: string;
+		is_room_admin: boolean;
+		number_in_room: number;
 	}
 
 	interface GameState extends Identified {
@@ -22,19 +24,29 @@ namespace WebApi.Entity {
 		pigs: number;
 		cows: number;
 		horses: number;
+		has_small_dog: boolean;
+		has_big_dog: boolean;
 	}
 
 	interface Room extends Identified {
-		game_states: GameState[];
 		name: string;
 		socket_id: string;
 		connected: number;
 		admin?: number;
 	}
+
+	interface DetailedRoom extends Room {
+		game_states: GameState[];
+		opponents: number[];
+	}
 }
 
 namespace WebApi.Requests {
-	interface UserRegister extends Omit<Unidentify<WebApi.Entity.User>, "room"> {
+	interface UserRegister {
+		email: string;
+		username: string;
+		first_name?: string;
+		last_name?: string;
 		password: string;
 	}
 

@@ -4,6 +4,7 @@ import { Switch } from "react-router";
 import ModalLoader from "../../components/common/ModalLoader";
 import PrivateRoute from "../../components/common/PrivateRoute";
 import PublicRoute from "../../components/common/PublicRoute";
+import Game from "../../pages/Game";
 import Login from "../../pages/Login";
 import Register from "../../pages/Register";
 import Rooms from "../../pages/Rooms";
@@ -29,6 +30,7 @@ const Routing: React.FC = () => {
 			<PublicRoute restricted isAuthorized={isAuthorized} path="/login" exact component={Login} />
 			<PublicRoute restricted isAuthorized={isAuthorized} path="/register" exact component={Register} />
 			<PrivateRoute isAuthorized={isAuthorized} path="/" exact component={Rooms} />
+			<PrivateRoute isAuthorized={isAuthorized} path="/game/:id" exact component={Game} />
 		</Switch>
 	);
 };
