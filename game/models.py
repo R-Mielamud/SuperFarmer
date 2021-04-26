@@ -40,6 +40,7 @@ class Room(Model, Serializable):
             "admin": admin.id if admin else None,
             "opponents": list(opponents),
             "game_started": instance.game_started,
+            "connected": instance.connected,
         }
 
 class GameState(Model, Serializable):
@@ -69,3 +70,15 @@ class GameState(Model, Serializable):
             "has_small_dog": instance.has_small_dog,
             "has_big_dog": instance.has_big_dog,
         }
+
+    @classmethod
+    def reset(cls, pk):
+        cls.objects.filter(pk=pk).update(
+            rabbits=0,
+            sheep=0,
+            pigs=0,
+            cows=0,
+            horses=0,
+            has_small_dog=False,
+            has_big_dog=False,
+        )

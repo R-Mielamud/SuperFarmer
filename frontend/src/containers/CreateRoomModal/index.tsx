@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
 import Button, { ButtonType } from "../../components/common/Button";
 import Form from "../../components/common/Form";
 import Input from "../../components/common/Input";
@@ -15,38 +14,31 @@ interface Props {
 }
 
 const CreateRoomModal: React.FC<Props> = ({ open, onCancel }) => {
-	const history = useHistory();
 	const [nameValue, setNameValue] = useState<string>("");
 	const [creatingName, setCreatingName] = useState<string | null>(null);
 	const [createRoom, setCreateRoom] = useState<Setter<string> | null>(null);
 
 	const create = (name: string) => {
-		setCreatingName(name);
-
 		if (createRoom) {
-			createRoom(name);
+			return createRoom(name);
 		}
+
+		setCreatingName(name);
 	};
 
-	const created = (id: string) => {
-		history.push(`/game/${id}`);
-	};
-
-	useIO((io) => {
-		io.on("connect", () => {
+	useIO({
+		handleOnce: (io) => {
 			const newCreateRoom = (name: string) => {
-				io.emit(ClientEvents.CREATE_ROOM, name, (socketID: string) => {
-					created(socketID);
-				});
+				io.emit(ClientEvents.CREATE_ROOM, name);
 			};
 
 			if (creatingName) {
-				newCreateRoom(creatingName);
 				setCreatingName(null);
+				newCreateRoom(creatingName);
 			}
 
 			setCreateRoom(() => newCreateRoom);
-		});
+		},
 	});
 
 	if (creatingName) {
