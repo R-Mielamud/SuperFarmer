@@ -150,7 +150,6 @@ def game_handler(io):
         if not user or not user.room or not user.is_room_admin:
             return
 
-        user.room.game_states.all().delete()
         room_id = user.room.socket_id
         room_pk = user.room.pk
         Room.objects.filter(pk=room_pk).delete()
@@ -226,6 +225,9 @@ def game_handler(io):
             last_processed_dice=user.number_in_room)
 
         success()
+
+        if is_win(game_state.first()):
+            finish_game(user)
 
     @io.on(EVENTS_ON["COMPLETE_TURN"])
     def complete_turn(sid):
@@ -310,4 +312,26 @@ def game_handler(io):
             "room": user.room.socket_id,
             "user": user.id,
             "game_state": game_state.first().self_serialize(),
+        })
+
+        if is_win(game_state.first()):
+            finish_game(user)
+
+    def is_win(game_state):
+        win_components = [game_state.rabbits, game_state.sheep,
+                          game_state.pigs, game_state.cows, game_state.horses]
+
+        win_conditions = map(lambda val: val > 0, win_components)
+
+        return all(win_conditions)
+
+    def finish_game(winner):
+        from game.models import Room
+
+        room_id = winner.room.socket_id
+        Room.objects.filter(pk=winner.room.pk).delete()
+
+        io.emit(EVENTS_EMIT["GAME_FINISHED"], {
+            "winner": winner.self_serialize(),
+            "room": room_id,
         })

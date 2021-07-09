@@ -15,6 +15,7 @@ import classList from "../../helpers/classList.helper";
 import styles from "./game.module.scss";
 import ExchangeModal from "../../components/ExchangeModal";
 import { OnExchangeToProps } from "../../components/Exchanger";
+import WinnerModal from "../../components/WinnerModal";
 
 interface GameLayoutItem {
 	count: number;
@@ -63,6 +64,7 @@ const GamePage: React.FC = () => {
 	const [myTurn, setMyTurn] = useState<boolean>(false);
 	const [receivedDiceProcessed, setReceivedDiceProcessed] = useState<boolean>(false);
 	const [exchangeModalOpened, setExchangeModalOpen] = useState<boolean>(false);
+	const [winner, setWinner] = useState<WebApi.Entity.User | null>(null);
 
 	const [setDiceFirst, setSetDiceFirst] = useState<Setter<TokenType> | null>(null);
 	const [setDiceSecond, setSetDiceSecond] = useState<Setter<TokenType> | null>(null);
@@ -344,6 +346,17 @@ const GamePage: React.FC = () => {
 						setRoom({ ...room, game_states: newStates });
 					},
 				);
+
+				io.on(
+					ServerEvents.GAME_FINISHED,
+					({ winner, room: roomId }: { winner: WebApi.Entity.User; room: string }) => {
+						if (roomId !== room?.socket_id) {
+							return;
+						}
+
+						setWinner(winner);
+					},
+				);
 			},
 		},
 		[room, user],
@@ -405,6 +418,7 @@ const GamePage: React.FC = () => {
 						const stateKey = getStateKey(type);
 						const main = j === (settings.selected ?? 1) - 1;
 						let disabledIndex = j;
+						let lastIndex = settings.count - 1;
 
 						if (
 							settings.numericCountStart &&
@@ -414,11 +428,16 @@ const GamePage: React.FC = () => {
 						) {
 							const start = settings.numericCountStart ?? 1;
 							disabledIndex = j - start + 1;
+							lastIndex = settings.count - start - 1;
+						}
+
+						if (settings.selected) {
+							console.log(disabledIndex, lastIndex);
 						}
 
 						const disabledSet = myState
-							? getDisabled(disabledIndex, settings.count - 1, stateKey, myState)
-							: getDisabled(disabledIndex, settings.count - 1, stateKey, opponentState);
+							? getDisabled(disabledIndex, lastIndex, stateKey, myState)
+							: getDisabled(disabledIndex, lastIndex, stateKey, opponentState);
 
 						return (
 							<div className={styles.cell} key={j}>
@@ -526,6 +545,7 @@ const GamePage: React.FC = () => {
 				onExchange={exhange}
 				onClose={() => setExchangeModalOpen(false)}
 			/>
+			{winner ? <WinnerModal winner={winner} onClose={() => window.location.replace("/")} /> : null}
 			<div className={styles.controls}>
 				{user.is_room_admin && !room.game_started && controlsVisible ? (
 					<div className={styles.buttons}>
