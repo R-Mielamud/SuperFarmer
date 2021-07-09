@@ -45,8 +45,8 @@
 		}
 
 		.main {
-			margin-left: 10px;
-			width: calc(100% - 30vh);
+			margin-left: 30px;
+			max-width: calc(100% - 30vh);
 		}
 
 		.opponents {
@@ -67,7 +67,7 @@
 
 		@media screen and (max-width: 900px) {
 			.main {
-				width: calc(100% - 20vh);
+				max-width: calc(100% - 20vh);
 			}
 
 			.opponents {
@@ -85,13 +85,15 @@
 			flex-direction: column;
 
 			.main {
-				width: 100%;
+				max-width: 100%;
+				margin: 0 auto;
 			}
 
 			.opponents {
 				width: 100%;
 				flex-flow: row wrap;
 				margin-top: 20px;
+				align-items: flex-start;
 
 				.opponent {
 					margin-left: 5px;
@@ -105,6 +107,7 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	position: relative;
 
 	& > .row {
 		width: 100%;
@@ -118,5 +121,19 @@
 				margin-right: 2%;
 			}
 		}
+	}
+
+	.firstDicePart {
+		border: 5px solid #00ffff;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
+
+	.secondDicePart {
+		border: 5px solid red;
+		position: absolute;
+		bottom: 0;
+		right: 0;
 	}
 }

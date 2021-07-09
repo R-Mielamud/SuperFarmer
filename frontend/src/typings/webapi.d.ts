@@ -38,6 +38,9 @@ namespace WebApi.Entity {
 	interface DetailedRoom extends Room {
 		game_states: GameState[];
 		opponents: number[];
+		current_turn: number;
+		game_started: boolean;
+		last_processed_dice: number;
 	}
 }
 
@@ -60,5 +63,15 @@ namespace WebApi.Specific {
 	interface AuthResult {
 		user: WebApi.Entity.User;
 		jwt_token: string;
+	}
+
+	interface DisabledSet {
+		disabled: boolean;
+		count?: number;
+	}
+
+	interface DiceData {
+		first: string;
+		second: string;
 	}
 }

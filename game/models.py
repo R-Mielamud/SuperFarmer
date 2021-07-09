@@ -2,10 +2,13 @@ from django.db.models import *
 from authorization.models import User
 from SuperFarmer.base import Serializable
 
+
 class Room(Model, Serializable):
     name = CharField(max_length=50)
     socket_id = CharField(max_length=200)
     game_started = BooleanField(default=False)
+    current_turn = IntegerField(default=1)
+    last_processed_dice = IntegerField(default=0)
 
     @property
     def connected(self):
@@ -30,7 +33,8 @@ class Room(Model, Serializable):
     @classmethod
     def serialize_detailed(cls, instance, current_user_id):
         admin = instance.users.filter(is_room_admin=True).first()
-        opponents = instance.users.exclude(id=current_user_id).values_list("id", flat=True)
+        opponents = instance.users.exclude(
+            id=current_user_id).values_list("id", flat=True)
 
         return {
             "id": instance.pk,
@@ -41,7 +45,11 @@ class Room(Model, Serializable):
             "opponents": list(opponents),
             "game_started": instance.game_started,
             "connected": instance.connected,
+            "current_turn": instance.current_turn,
+            "game_started": instance.game_started,
+            "last_processed_dice": instance.last_processed_dice,
         }
+
 
 class GameState(Model, Serializable):
     user = OneToOneField(to=User, on_delete=CASCADE, to_field="id")
