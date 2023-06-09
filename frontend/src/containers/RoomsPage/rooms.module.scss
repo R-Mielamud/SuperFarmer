@@ -1,0 +1,30 @@
+@import "../../styles/variables.scss";
+
+.rooms {
+	margin-top: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	max-height: calc(100% - 150px);
+	overflow-y: scroll;
+
+	.room {
+		margin-right: 10px;
+		margin-bottom: 10px;
+		box-sizing: border-box;
+		width: 200px;
+		height: 200px;
+		border: 1px solid $black-color;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+
+		.header {
+			margin: 0;
+		}
+
+		.button {
+			margin-top: 10px;
+		}
+	}
+}

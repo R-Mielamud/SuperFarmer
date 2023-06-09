@@ -1,0 +1,50 @@
+@import "./variables.scss";
+
+body {
+	background-color: $body-bg;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	margin: 0;
+	padding: 0;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&.column {
+		flex-direction: column;
+	}
+}
+
+.fill-height {
+	height: 100%;
+}
+
+.fill-width {
+	width: 100%;
+}
+
+.meta {
+	color: $grey-color;
+	font-size: 12px;
+
+	&.error {
+		color: $error-color;
+	}
+
+	&.tip {
+		width: 100%;
+		text-align: center;
+		margin-top: 10px;
+	}
+}
+
+html,
+body,
+.fill,
+#root {
+	@extend .fill-width;
+	@extend .fill-height;
+}

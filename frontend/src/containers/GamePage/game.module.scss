@@ -1,0 +1,139 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+
+	.controls {
+		display: flex;
+		justify-content: space-between;
+		margin-bottom: 10px;
+
+		.buttons {
+			display: flex;
+
+			button:not(button:last-child) {
+				margin-right: 10px;
+			}
+		}
+
+		.headers {
+			display: flex;
+
+			h3 {
+				margin: 0;
+
+				&:not(h3:last-child) {
+					margin-right: 20px;
+				}
+			}
+
+			.myTurn {
+				color: green;
+			}
+		}
+	}
+
+	.mainWrapper {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+
+		& > * {
+			height: 100%;
+		}
+
+		.main {
+			margin-left: 30px;
+			max-width: calc(100% - 30vh);
+		}
+
+		.opponents {
+			$opponentD: calc(30vh - 30px);
+			width: $opponentD;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			.opponent {
+				width: $opponentD;
+				height: $opponentD;
+				box-sizing: border-box;
+				border: 1px solid black;
+				margin-top: 5px;
+			}
+		}
+
+		@media screen and (max-width: 900px) {
+			.main {
+				max-width: calc(100% - 20vh);
+			}
+
+			.opponents {
+				$opponentD: calc(20vh - 30px);
+				width: $opponentD;
+
+				.opponent {
+					width: $opponentD;
+					height: $opponentD;
+				}
+			}
+		}
+
+		@media screen and (max-width: 500px) {
+			flex-direction: column;
+
+			.main {
+				max-width: 100%;
+				margin: 0 auto;
+			}
+
+			.opponents {
+				width: 100%;
+				flex-flow: row wrap;
+				margin-top: 20px;
+				align-items: flex-start;
+
+				.opponent {
+					margin-left: 5px;
+				}
+			}
+		}
+	}
+}
+
+.gameLayout {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+
+	& > .row {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+
+		.cell {
+			border-radius: 50%;
+
+			&:not(.cell:last-child) {
+				margin-right: 2%;
+			}
+		}
+	}
+
+	.firstDicePart {
+		border: 5px solid #00ffff;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+	}
+
+	.secondDicePart {
+		border: 5px solid red;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+	}
+}

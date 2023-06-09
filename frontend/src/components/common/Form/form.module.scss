@@ -1,0 +1,5 @@
+@import "../Input/input.module.scss";
+
+.form > *:not(label):not(*:last-child) {
+	margin-bottom: 15px;
+}
