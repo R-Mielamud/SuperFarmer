@@ -10,6 +10,7 @@ class User(Model, Serializable):
     last_name = CharField(max_length=20, blank=True, null=True)
     room = ForeignKey(to="game.Room", on_delete=SET_NULL, related_name="users", blank=True, null=True)
     is_room_admin = BooleanField(default=False)
+    number_in_room = IntegerField(default=0)
     is_active = True
 
     def __str__(self):
@@ -30,4 +31,6 @@ class User(Model, Serializable):
             "email": instance.email,
             "username": instance.username,
             "room": instance.room.socket_id if instance.room else None,
+            "is_room_admin": instance.is_room_admin,
+            "number_in_room": instance.number_in_room,
         }

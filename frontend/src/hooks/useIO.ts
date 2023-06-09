@@ -1,32 +1,35 @@
-import { useEffect, useState } from "react";
-import { io as connect, Socket } from "socket.io-client";
-import { getToken } from "../helpers/token.helper";
-import { ServerEventsMap, ClientEventsMap } from "../typings/socket";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router";
+import { Socket } from "socket.io-client";
+import { RootState } from "../typings/state";
 
 interface Handler {
 	(io: Socket): void;
 }
 
-export default function useIO(handle: Handler, deps: any[] = []) {
-	const [io, setIO] = useState<Socket<ServerEventsMap, ClientEventsMap> | null>(null);
+interface HandlerSettings {
+	handle?: Handler;
+	handleOnce?: Handler;
+}
+
+export default function useIO(handler: HandlerSettings, deps: any[] = []): void {
+	const location = useLocation();
+	const { io } = useSelector((state: RootState) => state.socket);
 
 	useEffect(() => {
-		if (!io) {
-			const token = getToken();
-
-			if (!token) {
-				throw new Error("Not authenticated");
-			}
-
-			const url = process.env.REACT_APP_SOCKET_IO_URL ?? "";
-			const auth = { token: "Bearer " + token };
-			const newIO = connect(url, { auth });
-
-			setIO(newIO);
-			handle(newIO);
-		} else {
-			io.off();
-			handle(io);
+		if (handler.handleOnce && io) {
+			handler.handleOnce(io);
 		}
-	}, deps);
+
+		return () => void io?.off();
+	}, [location.pathname, io]);
+
+	useEffect(() => {
+		if (handler.handle && io) {
+			handler.handle(io);
+		}
+
+		return () => void io?.off();
+	}, [...deps, location.pathname, io]);
 }
